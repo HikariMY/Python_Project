@@ -1,0 +1,32 @@
+ระบบจัดการข้อมูลจัดการสินค้าในร้านหนังสือ ประกอบด้วย 5 ฟิลด์ ได้แก่ 1.book_id 2.book_name 3.book_category 4.book_price 5.add_date
+
+Example Data
+[book_id], [book_name], [book_category], [book_price], [add_date]
+  1001       Onepice         manga           90        19/09/2024
+
+[book_id], [book_name],               [book_category], [book_price], [add_date]
+  1002       The lord of the rings         noval           600        20/09/2024
+
+[book_id], [book_name],   [book_category], [book_price], [add_date]
+  1003       Chainsawman      manga           150        21/09/2024
+
+=============================================================
+Summry Report:
+Added Book:
+
+      Category : Noval
+      Number of Products: 1
+      1002       The lord of the rings         noval           600        20/09/2024
+      Total Price :600.00
+------------------------------------------------------------------------------------------------------------------------------
+      Category : Manga
+      Number of Products: 2
+      
+
+1001       Onepice                 manga           90         19/09/2024
+       1003       Chainsawman      manga           150        21/09/2024
+      Total Price :240.00
+------------------------------------------------------------------------------------------------------------------------------
+       Total Item: 3
+       Total Category: 2
+==============================================================
