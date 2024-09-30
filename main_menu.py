@@ -1,2 +1,2 @@
 def main():
-    menu = int(input("=="))
+    menu = int(input("===="))
