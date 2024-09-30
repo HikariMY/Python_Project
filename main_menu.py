@@ -1,5 +1,5 @@
 def main():
-    print('-' * 20)
+    print('-' * 30)
     print("\t\tBook Sleepwalker")
     print("\t\tBook Management")
     print("Management Menu")
