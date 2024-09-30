@@ -35,7 +35,7 @@ def  view_report():
     print("")
 
 def  exit_program():
-    chioce = input("Are you sure to Exit : ")
+    chioce = input("Are you sure to Exit\nYour Chioce: ")
     if chioce in ['y','Y'] :
         exit()
     elif chioce in ['n','N']:
