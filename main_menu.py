@@ -1,8 +1,10 @@
 def main():
     print('-' * 30)
-    print("\t\tBook Sleepwalker")
-    print("\t\tBook Management")
+    print("\tBook Sleepwalker")
+    print("\tBook Management")
+    print('=' * 30)
     print("Management Menu")
+    print('-' * 30)
     while True:
         try:
             menu = int(input("\t1.Show Book\n\t2.Add Book\n\t3.Update Book\n\t4.Search Book\n\t5.Delete Book\n\t6.Filter Book\n\t7.Exit\nYour Choice: "))
@@ -24,6 +26,7 @@ def main():
                 print("Number you entered is not an option")
         except ValueError:
             print("Please enter only numbers 1-7")
+    
 
 
 def show_book():
