@@ -5,21 +5,25 @@ def main():
     print("Management Menu")
     while True:
         try:
-            menu = int(input("\t1.Show Book\n\t2.Add Book\n\t3.Search Book\n\t4.View Report\n\t5.Exit\nYour Choice: "))
+            menu = int(input("\t1.Show Book\n\t2.Add Book\n\t3.Update Book\n\t4.Search Book\n\t5.Delete Book\n\t6.Filter Book\n\t7.Exit\nYour Choice: "))
             if menu == 1:
                 show_book()
             elif menu == 2:
                 add_book()
             elif menu == 3:
-                search_book()
+                update_book()
             elif menu == 4:
-                view_report()
+                search_book()
             elif menu == 5:
-                exit_program()
+                del_books()
+            elif menu == 6:
+                filter_books()
+            elif menu == 7:
+               exit_program()
             else:
                 print("Number you entered is not an option")
         except ValueError:
-            print("Please enter only numbers 1-5")
+            print("Please enter only numbers 1-7")
 
 
 def show_book():
@@ -74,13 +78,13 @@ def update_book():
             book['book_category'] = input("Enter new Book Category or Enter to keep the current category") or book['book_category']
             book['book_price'] = input("Enter new Book Name or Enter to keep the current price") or book['book_price']
     
-
-def search_book():
-    
-
+def search_book(): 
     print("")
 
-def view_report():
+def del_books():
+    print("")
+
+def filter_books():
     print("")
 
 def exit_program():
