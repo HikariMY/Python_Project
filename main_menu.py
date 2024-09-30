@@ -52,34 +52,58 @@ def add_book():
             print()
 
 def update_book():
-    book_id = int(input("Enter the Book ID for Update: "))
+    book_id_to_update = input("Enter the Book ID of the book to update: ")
 
+    # Reading the book data from the file
     books = []
-    with open("book_in_stock.txt") as book_files:
-        lines = book_files.readlines()
+    with open("book_in_stock.txt", "r") as book_file:
+        lines = book_file.readlines()
 
-    for element in range(0, len(lines), 5):
+    # Grouping lines into book entries
+    for i in range(0, len(lines), 5):
         book = {
-            'book_id': lines[element].strip(),
-            'book_name': lines[element + 1].strip(),
-            'book_category': lines[element + 2].strip(),
-            'book_price': lines[element + 3].strip(),
-            'add_date': lines[element + 4].strip()
+            "id": lines[i].strip(),
+            "name": lines[i+1].strip(),
+            "category": lines[i+2].strip(),
+            "price": lines[i+3].strip(),
+            "add_date": lines[i+4].strip()
         }
         books.append(book)
 
+    # Searching for the book to update
     book_found = False
-    for book in books :
-        if book['book_id'] == book_id :
+    for book in books:
+        if book['id'] == book_id_to_update:
             print("Book found. Current details:")
             print(f"Name: {book['name']}")
             print(f"Category: {book['category']}")
             print(f"Price: {book['price']}")
             print(f"Add Date: {book['add_date']}")
 
-            book['book_name'] = input("Enter new Book Name or Enter to keep the current name") or book['book_name']
-            book['book_category'] = input("Enter new Book Category or Enter to keep the current category") or book['book_category']
-            book['book_price'] = input("Enter new Book Name or Enter to keep the current price") or book['book_price']
+            # Updating book details
+            book['name'] = input("Enter new Book Name (or press Enter to keep the current): ") or book['name']
+            book['category'] = input("Enter new Book Category (or press Enter to keep the current): ") or book['category']
+            book['price'] = input("Enter new Book Price (or press Enter to keep the current): ") or book['price']
+            book['add_date'] = input("Enter new Add Date (or press Enter to keep the current): ") or book['add_date']
+
+            book_found = True
+            break
+
+    if not book_found:
+        print("Book ID not found.")
+
+    # Writing the updated data back to the file
+    with open("book_in_stock.txt", "w") as book_file:
+        for book in books:
+            book_file.write(f"{book['id']}\n")
+            book_file.write(f"{book['name']}\n")
+            book_file.write(f"{book['category']}\n")
+            book_file.write(f"{book['price']}\n")
+            book_file.write(f"{book['add_date']}\n")
+
+    if book_found:
+        print("Book details updated successfully.")
+
     
 def search_book(): 
     print("")
