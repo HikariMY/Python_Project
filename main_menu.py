@@ -39,21 +39,39 @@ def add_book():
     with open("book_in_stock.txt", "a") as book_files:
         for count in range(1, add_book_count + 1):
             print(f'Enter data for book #{count}')
-            book_id = int(input("Book ID: "))
+            try:
+                book_id = int(input("Book ID: "))
+            except ValueError:
+                print("Please enter a valid integer for Book ID Ex.100?.")
+
             book_name = input("Book Name: ")
-            book_category = input("Book Category: ")
-            book_price = float(input("Book Price: "))
-            add_date = input("Add Date (DD-MM-YYYY): ")
-            book_files.write(f"{book_id}\n")
-            book_files.write(f"{book_name}\n")
-            book_files.write(f"{book_category}\n")
-            book_files.write(f"{book_price}\n")
-            book_files.write(f"{add_date}\n")
-            print()
+
+            while True:
+                book_category = input("Book Category (manga/novel): ").lower()
+                if book_category in ['manga','novel']:
+                    break
+                else:
+                    print("Invalid category. Please enter 'manga' or 'novel'.")
+            while True:
+                try:
+                    book_price = float(input("Book Price: "))
+                except ValueError:
+                    print("Please Enter numbers of book price.")
+
+                add_date = input("Add Date (DD-MM-YYYY): ")
+
+                book_files.write(f"{book_id}\n")
+                book_files.write(f"{book_name}\n")
+                book_files.write(f"{book_category}\n")
+                book_files.write(f"{book_price}\n")
+                book_files.write(f"{add_date}\n")
+                print()
 
 def update_book():
-    book_id_to_update = input("Enter the Book ID of the book to update: ")
-
+    try:
+        book_id_to_update = input("Enter the Book ID of the book to update: ")
+    except ValueError:
+        print("Please enter a valid integer for Book ID Ex.100?.")
     # Reading the book data from the file
     books = []
     with open("book_in_stock.txt", "r") as book_file:
