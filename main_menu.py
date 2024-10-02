@@ -259,7 +259,7 @@ def search_book(book_id):
        
         return "Error: The books.txt file was not found."
 
-# Example of function call
+
 book_id_input = input("Enter book_id: ")
 print(search_book(book_id_input))
 
