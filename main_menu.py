@@ -224,48 +224,48 @@ def update_book():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
    
-def search_book(book_id):
+def search_book():
+    import re
     try:
-        # ตรวจสอบว่ากรอกเป็นตัวเลขหรือไม่
-        book_id = book_id.strip()  # ลบช่องว่างหัวท้ายก่อน
-        if not book_id.isdigit():  # ตรวจสอบว่าเป็นตัวเลขทั้งหมดหรือไม่
-            return "Invalid input! Please enter a valid book_id (numeric)."
-        
-        # เปิดไฟล์และอ่านข้อมูล
-        with open('book_in_stock.txt', 'a') as file:
-            lines = file.readlines()  # อ่านทุกบรรทัดจากไฟล์
+        book_id_to_search = input("Enter the Book ID of the book to search: ")
 
-            # แปลงข้อมูลเป็นกลุ่มละ 5 บรรทัด (ข้อมูลของแต่ละหนังสือ)
+        # Reading the book data from the file
+        books = []
+        try:
+            with open("book_in_stock.txt", "r") as book_file:
+                lines = book_file.readlines()
+            
+            # Grouping lines into book entries
             for i in range(0, len(lines), 5):
-                book_data = lines[i:i + 5]  # เก็บข้อมูลของแต่ละหนังสือ 5 บรรทัด
+                book = {
+                    "id": lines[i].strip(),
+                    "name": lines[i+1].strip(),
+                    "category": lines[i+2].strip(),
+                    "price": lines[i+3].strip(),
+                    "add_date": lines[i+4].strip()
+                }
+                books.append(book)
 
-                # ลบช่องว่างหัวท้ายของแต่ละบรรทัด
-                book_data = [line.strip() for line in book_data]
+            # Searching for the book
+            book_found = False
+            for book in books:
+                if book['id'].lower() == book_id_to_search.lower():
+                    print("Book found. Details:")
+                    print(f"Name: {book['name']}")
+                    print(f"Category: {book['category']}")
+                    print(f"Price: {book['price']}")
+                    print(f"Add Date: {book['add_date']}")
+                    book_found = True
+                    break
 
-                # ตรวจสอบว่ามีข้อมูลครบ 5 บรรทัดหรือไม่
-                if len(book_data) < 5:
-                    continue  # ข้ามข้อมูลที่ไม่ครบ
+            if not book_found:
+                print("Book ID not found.")
 
-                # ตรวจสอบว่า book_id ตรงกับที่ผู้ใช้ป้อนหรือไม่
-                if book_data[0] == book_id:
-                    return {
-                        "book_id": book_data[0],
-                        "book_name": book_data[1],
-                        "book_category": book_data[2],
-                        "book_price": book_data[3],
-                        "add_date": book_data[4]
-                    }
+        except FileNotFoundError:
+            print("Error: The book_in_stock.txt file was not found.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
-        # ถ้าไม่เจอข้อมูลตาม book_id ที่ค้นหา
-        return f"No book found with book_id: {book_id}"
-
-    except FileNotFoundError:
-        # จัดการข้อผิดพลาดกรณีไฟล์ไม่พบ
-        return "Error: The books.txt file was not found."
-
-# Example of function call
-book_id_input = input("Enter book_id: ")
-print(search_book(book_id_input))
 
 
 
