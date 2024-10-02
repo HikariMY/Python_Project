@@ -227,8 +227,6 @@ def update_book():
 def search_book():
     import re
     try:
-        book_id_to_search = input("Enter the Book ID of the book to search: ")
-
         # Reading the book data from the file
         books = []
         try:
@@ -246,21 +244,28 @@ def search_book():
                 }
                 books.append(book)
 
-            # Searching for the book
-            book_found = False
-            for book in books:
-                if book['id'].lower() == book_id_to_search.lower():
-                    print("Book found. Details:")
-                    print(f"Name: {book['name']}")
-                    print(f"Category: {book['category']}")
-                    print(f"Price: {book['price']}")
-                    print(f"Add Date: {book['add_date']}")
-                    book_found = True
+            while True:  # Loop to keep asking for book searches
+                book_name_to_search = input("Enter the Book name of the book to search (or type 'exit' to quit): ")
+                
+                if book_name_to_search.lower() == 'exit':
+                    print("Exiting search...",main())
                     break
+                
+                # Searching for the book
+                book_found = False
+                for book in books:
+                    if book['name'].lower() == book_name_to_search.lower():
+                        print("Book found. Details:")
+                        print(f"Name: {book['name']}")
+                        print(f"Category: {book['category']}")
+                        print(f"Price: {book['price']}")
+                        print(f"Add Date: {book['add_date']}")
+                        book_found = True
+                        break
 
-            if not book_found:
-                print("Book ID not found.")
-
+                if not book_found:
+                    print("Book ID not found.")
+                
         except FileNotFoundError:
             print("Error: The book_in_stock.txt file was not found.")
     except Exception as e:
