@@ -224,8 +224,46 @@ def update_book():
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
    
-def search_book(): 
-    print("")
+def search_book(book_id):
+    try:
+      
+        book_id = int(book_id)
+        
+     
+        with open('book_in_stock.txt', 'r') as file:
+            for line in file:
+               
+                line = line.strip()
+
+               
+                data = line.split(',')
+
+               
+                if int(data[0]) == book_id:
+                    return {
+                        "book_id": data[0],
+                        "book_name": data[1],
+                        "book_category": data[2],
+                        "book_price": data[3],
+                        "add_date": data[4]
+                    }
+        
+        
+        return f"No book found with book_id: {book_id}"
+
+    except ValueError:
+      
+        return "Invalid input! Please enter a valid book_id (numeric)."
+
+    except FileNotFoundError:
+       
+        return "Error: The books.txt file was not found."
+
+# Example of function call
+book_id_input = input("Enter book_id: ")
+print(search_book(book_id_input))
+
+
 
 def del_book():
     book_id_to_delete = input("Enter the Book ID of the book to update: ")
