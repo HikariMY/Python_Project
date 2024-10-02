@@ -17,7 +17,7 @@ def main():
             elif menu == 4:
                 search_book()
             elif menu == 5:
-                del_books()
+                del_book()
             elif menu == 6:
                 filter_books()
             elif menu == 7:
@@ -65,7 +65,7 @@ def add_book():
                 book_files.write(f"{book_id}\n")
                 book_files.write(f"{book_name}\n")
                 book_files.write(f"{book_category}\n")
-                book_files.write(f"{book_price}\n")
+                book_files.write(f"{book_price:.2f}\n")
                 book_files.write(f"{add_date}\n")
                 print()
 
@@ -107,15 +107,20 @@ def update_book():
 
                     # Updating book details
                     book['name'] = input("Enter new Book Name (or press Enter to keep the current): ") or book['name']
-                    book['category'] = input("Enter new Book Category (or press Enter to keep the current): ") or book['category']
-                    
+
+                    while True:
+                        book['category'] = input("Enter new Book Category (or press Enter to keep the current): ") or book['category']
+                        if book['category'] in ['manga','novel']:
+                            break
+                        else:
+                            print("Invalid category. Please enter 'manga' or 'novel'.")
                     # Validate price input
                     new_price = input("Enter new Book Price (or press Enter to keep the current): ")
                     if new_price:
                         while not new_price.replace('.', '', 1).isdigit():
                             print("Invalid price. Please enter a valid number.")
                             new_price = input("Enter new Book Price (or press Enter to keep the current): ")
-                        book['price'] = new_price or book['price']
+                        book['price'] = format(float(new_price), '.2f') or format(float(book['price']), '.2f')
                     
                     book['add_date'] = input("Enter new Add Date (or press Enter to keep the current): ") or book['add_date']
 
@@ -147,8 +152,50 @@ def update_book():
 def search_book(): 
     print("")
 
-def del_books():
-    print("")
+def del_book():
+    book_id_to_delete = input("Enter the Book ID of the book to update: ")
+    # อ่านข้อมูลจากไฟล์
+    books = []
+    try:
+        with open("book_in_stock.txt", "r") as book_file:
+            lines = book_file.readlines()
+            # จัดกลุ่มข้อมูลเป็นรายการหนังสือ
+            
+            for i in range(0, len(lines), 5):
+                book = {
+                    "id": lines[i].strip(),
+                    "name": lines[i+1].strip(),
+                    "category": lines[i+2].strip(),
+                    "price": lines[i+3].strip(),
+                    "add_date": lines[i+4].strip()
+                }
+                books.append(book)
+            print(books)
+
+        # กรองรายการหนังสือที่ไม่ตรงกับ book_id ที่ต้องการลบ
+        updated_books = [book for book in books if book['id'] != book_id_to_delete]
+        print(updated_books)
+
+        # เช็คว่า book_id ตรงที่ต้องการลบมีอยู่ในไฟล์หรือไม่
+        if len(books) == len(updated_books):
+            raise ValueError("No book found with the given ID.")
+
+        # เขียนข้อมูลที่เหลือกลับไปยังไฟล์
+        with open("book_in_stock.txt", "w") as book_file:
+            for book in updated_books:
+                book_file.write(f"{book['id']}\n")
+                book_file.write(f"{book['name']}\n")
+                book_file.write(f"{book['category']}\n")
+                book_file.write(f"{book['price']}\n")
+                book_file.write(f"{book['add_date']}\n")
+
+
+        print("Book deleted successfully.")
+
+    except FileNotFoundError:
+        print("Error: The book_in_stock.txt file was not found.")
+    except ValueError as ve:
+        print(ve)  # แสดงข้อความเมื่อไม่พบ book_id ที่ต้องการลบ
 
 def filter_books():
     print("")
