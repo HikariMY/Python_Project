@@ -30,7 +30,70 @@ def main():
 
 
 def show_book():
-    print("")
+    category_details = {}
+    total_items = 0
+    total_categories = 0
+
+    try:
+        with open("book_in_stock.txt", "r") as book_file:
+            lines = book_file.readlines()
+
+        # ตรวจสอบว่าจำนวนบรรทัดต้องเป็นกลุ่มละ 5 บรรทัด
+        if len(lines) % 5 != 0:
+            print("ข้อมูลในไฟล์ไม่ถูกต้อง แต่ละหนังสือต้องมี 5 บรรทัด")
+            return
+
+        # ดึงข้อมูลหนังสือและจัดกลุ่มตามหมวดหมู่
+        for i in range(0, len(lines), 5):
+            book_id = lines[i].strip()       # รหัสหนังสือ (บรรทัดที่ 1)
+            book_name = lines[i+1].strip()   # ชื่อหนังสือ (บรรทัดที่ 2)
+            category = lines[i+2].strip()    # หมวดหมู่หนังสือ (บรรทัดที่ 3)
+            price = float(lines[i+3].strip()) # ราคา (บรรทัดที่ 4)
+            book_date = lines[i+4].strip()   # วันที่เพิ่มหนังสือ (บรรทัดที่ 5)
+
+            if category:
+                category = category.lower()  # เปลี่ยนเป็นตัวพิมพ์เล็ก
+                if category not in category_details:
+                    category_details[category] = {
+                        "books": [],
+                        "total_price": 0.0
+                    }
+                
+                # เพิ่มข้อมูลหนังสือในหมวดหมู่
+                category_details[category]["books"].append({
+                    "id": book_id,
+                    "name": book_name,
+                    "price": price,
+                    "date": book_date
+                })
+                category_details[category]["total_price"] += price
+                total_items += 1
+
+        # แสดงผลสรุปตามหมวดหมู่
+        total_categories = len(category_details)
+        print("Summary Report:")
+        print("Added Book:\n")
+
+        for category, details in category_details.items():
+            print(f"      Category : {category.capitalize()}")
+            print(f"      Number of Products: {len(details['books'])}")
+            for book in details["books"]:
+                print(f"      {book['id']:<10}{book['name']:<20}{category:<15}{book['price']:<10}{book['date']}")
+            print(f"      Total Price :{details['total_price']:.2f}")
+            print("-" * 95)
+
+        print(f"      Total Item: {total_items}")
+        print(f"      Total Category: {total_categories}")
+        print("=" * 60)
+
+    except FileNotFoundError:
+        print("ไม่พบไฟล์ 'book_in_stock.txt'")
+    except Exception as e:
+        print(f"เกิดข้อผิดพลาด: {e}")
+# ตัวอย่างการเรียกใช้งาน
+show_book()
+
+
 
 def add_book():
     
