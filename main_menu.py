@@ -31,6 +31,7 @@ def show_book():
     print("")
 
 def add_book():
+    import re
     try:
         add_book_count = int(input("How many books do you want to add: "))
 
@@ -38,10 +39,12 @@ def add_book():
             with open("book_in_stock.txt", "a") as book_files:
                 for count in range(1, add_book_count + 1):
                     print(f'Enter data for book #{count}')
-                    try:
-                        book_id = int(input("Book ID: "))
-                    except ValueError:
-                        print("Please enter a valid integer for Book ID Ex.100?.")
+                    while True:
+                        try:
+                            book_id = int(input("Book ID: "))
+                            break
+                        except ValueError:
+                            print("Please enter a valid integer for Book ID Ex.100?.")
 
                     book_name = input("Book Name: ")
 
@@ -57,8 +60,14 @@ def add_book():
                             break
                         except ValueError :
                             print("Please enter a valid float ")
-
-                add_date = input("Add Date (DD-MM-YYYY): ")
+                    
+                    while True:
+                            add_date = input("Add Date (DD-MM-YYYY): ")
+                            date_pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$"
+                            if re.match(date_pattern, add_date):
+                                break
+                            else:
+                                print("Please enter Date in formate DD-MM-YYYY")
 
                 book_files.write(f"{book_id}\n")
                 book_files.write(f"{book_name}\n")
@@ -73,6 +82,7 @@ def add_book():
         print("Plaese Enter a Inter numbers")
 
 def update_book():
+    import re
     try:
         book_id_to_update = input("Enter the Book ID of the book to update: ")
 
@@ -119,8 +129,14 @@ def update_book():
                             print("Invalid price. Please enter a valid number.")
                             new_price = input("Enter new Book Price (or press Enter to keep the current): ")
                         book['price'] = format(float(new_price), '.2f') or format(float(book['price']), '.2f')
-                    
-                    book['add_date'] = input("Enter new Add Date (or press Enter to keep the current): ") or book['add_date']
+
+                    while True:
+                        book['add_date'] = input("Enter new Add Date (DD-MM-YYYY) (or press Enter to keep the current): ") or book['add_date']
+                        date_pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$"
+                        if re.match(date_pattern, book['add_date']):
+                            break
+                        else:
+                            print("Please enter Date in formate DD-MM-YYYY")
 
                     book_found = True
                     break
