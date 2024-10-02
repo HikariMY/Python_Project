@@ -226,42 +226,47 @@ def update_book():
    
 def search_book(book_id):
     try:
-      
-        book_id = int(book_id)
+        # ตรวจสอบว่ากรอกเป็นตัวเลขหรือไม่
+        book_id = book_id.strip()  # ลบช่องว่างหัวท้ายก่อน
+        if not book_id.isdigit():  # ตรวจสอบว่าเป็นตัวเลขทั้งหมดหรือไม่
+            return "Invalid input! Please enter a valid book_id (numeric)."
         
-     
-        with open('book_in_stock.txt', 'r') as file:
-            for line in file:
-               
-                line = line.strip()
+        # เปิดไฟล์และอ่านข้อมูล
+        with open('book_in_stock.txt', 'a') as file:
+            lines = file.readlines()  # อ่านทุกบรรทัดจากไฟล์
 
-               
-                data = line.split(',')
+            # แปลงข้อมูลเป็นกลุ่มละ 5 บรรทัด (ข้อมูลของแต่ละหนังสือ)
+            for i in range(0, len(lines), 5):
+                book_data = lines[i:i + 5]  # เก็บข้อมูลของแต่ละหนังสือ 5 บรรทัด
 
-               
-                if int(data[0]) == book_id:
+                # ลบช่องว่างหัวท้ายของแต่ละบรรทัด
+                book_data = [line.strip() for line in book_data]
+
+                # ตรวจสอบว่ามีข้อมูลครบ 5 บรรทัดหรือไม่
+                if len(book_data) < 5:
+                    continue  # ข้ามข้อมูลที่ไม่ครบ
+
+                # ตรวจสอบว่า book_id ตรงกับที่ผู้ใช้ป้อนหรือไม่
+                if book_data[0] == book_id:
                     return {
-                        "book_id": data[0],
-                        "book_name": data[1],
-                        "book_category": data[2],
-                        "book_price": data[3],
-                        "add_date": data[4]
+                        "book_id": book_data[0],
+                        "book_name": book_data[1],
+                        "book_category": book_data[2],
+                        "book_price": book_data[3],
+                        "add_date": book_data[4]
                     }
-        
-        
+
+        # ถ้าไม่เจอข้อมูลตาม book_id ที่ค้นหา
         return f"No book found with book_id: {book_id}"
 
-    except ValueError:
-      
-        return "Invalid input! Please enter a valid book_id (numeric)."
-
     except FileNotFoundError:
-       
+        # จัดการข้อผิดพลาดกรณีไฟล์ไม่พบ
         return "Error: The books.txt file was not found."
 
-
+# Example of function call
 book_id_input = input("Enter book_id: ")
 print(search_book(book_id_input))
+
 
 
 
