@@ -38,7 +38,7 @@ def show_book():
 
         # ตรวจสอบว่าจำนวนบรรทัดต้องเป็นกลุ่มละ 5 บรรทัด
         if len(lines) % 5 != 0:
-            print("ข้อมูลในไฟล์ไม่ถูกต้อง แต่ละหนังสือต้องมี 5 บรรทัด")
+            print("Data is not complete ")
             return
 
         # ดึงข้อมูลหนังสือและจัดกลุ่มตามหมวดหมู่
@@ -82,16 +82,12 @@ def show_book():
 
         print(f"      Total Item: {total_items}")
         print(f"      Total Category: {total_categories}")
-        print("=" * 60)
+        print("=" * 95)
 
     except FileNotFoundError:
-        print("ไม่พบไฟล์ 'book_in_stock.txt'")
+        print("File 'book_in_stock.txt' not fond.")
     except Exception as e:
-        print(f"เกิดข้อผิดพลาด: {e}")
-# ตัวอย่างการเรียกใช้งาน
-show_book()
-
-
+        print(f"Error: {e}")
 
 def add_book():
     import re
@@ -225,7 +221,6 @@ def update_book():
         print(f"An unexpected error occurred: {e}")
    
 def search_book():
-    import re
     try:
         # Reading the book data from the file
         books = []
@@ -245,17 +240,18 @@ def search_book():
                 books.append(book)
 
             while True:  # Loop to keep asking for book searches
-                book_name_to_search = input("Enter the Book name of the book to search (or type 'exit' to quit): ")
+                book_name_to_search = input("Enter the Book Name or Book ID to search (or type 'exit' to back to main menu): ")
                 
                 if book_name_to_search.lower() == 'exit':
-                    print("Exiting search...",main())
+                    main()
                     break
                 
                 # Searching for the book
                 book_found = False
                 for book in books:
-                    if book['name'].lower() == book_name_to_search.lower():
+                    if book['id'] == book_name_to_search or book['name'].lower() == book_name_to_search.lower():
                         print("Book found. Details:")
+                        print(f"ID: {book['id']}")
                         print(f"Name: {book['name']}")
                         print(f"Category: {book['category']}")
                         print(f"Price: {book['price']}")
@@ -270,10 +266,6 @@ def search_book():
             print("Error: The book_in_stock.txt file was not found.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-
-
-
-
 
 def del_book():
     book_id_to_delete = input("Enter the Book ID of the book to update: ")
