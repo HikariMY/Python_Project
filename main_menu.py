@@ -33,94 +33,110 @@ def show_book():
     print("")
 
 def add_book():
-    
-    add_book_count = int(input("How many books do you want to add: "))
+    try:
+        add_book_count = int(input("How many books do you want to add: "))
 
-    with open("book_in_stock.txt", "a") as book_files:
-        for count in range(1, add_book_count + 1):
-            print(f'Enter data for book #{count}')
-            try:
-                book_id = int(input("Book ID: "))
-            except ValueError:
-                print("Please enter a valid integer for Book ID Ex.100?.")
+        try:
+            with open("book_in_stock.txt", "a") as book_files:
+                for count in range(1, add_book_count + 1):
+                    print(f'Enter data for book #{count}')
+                    try:
+                        book_id = int(input("Book ID: "))
+                    except ValueError:
+                        print("Please enter a valid integer for Book ID Ex.100?.")
 
-            book_name = input("Book Name: ")
+                    book_name = input("Book Name: ")
 
-            while True:
-                book_category = input("Book Category (manga/novel): ").lower()
-                if book_category in ['manga','novel']:
-                    break
-                else:
-                    print("Invalid category. Please enter 'manga' or 'novel'.")
-            while True:
-                try:
+                    while True:
+                        book_category = input("Book Category (manga/novel): ").lower()
+                        if book_category in ['manga','novel']:
+                            break
+                        else:
+                            print("Invalid category. Please enter 'manga' or 'novel'.")
+
                     book_price = float(input("Book Price: "))
-                except ValueError:
-                    print("Please Enter numbers of book price.")
 
-                add_date = input("Add Date (DD-MM-YYYY): ")
+                    add_date = input("Add Date (DD-MM-YYYY): ")
 
-                book_files.write(f"{book_id}\n")
-                book_files.write(f"{book_name}\n")
-                book_files.write(f"{book_category}\n")
-                book_files.write(f"{book_price}\n")
-                book_files.write(f"{add_date}\n")
-                print()
+                    book_files.write(f"{book_id}\n")
+                    book_files.write(f"{book_name}\n")
+                    book_files.write(f"{book_category}\n")
+                    book_files.write(f"{book_price}\n")
+                    book_files.write(f"{add_date}\n")
+                    print()
+        except Exception as e :
+            print(f"An unexpected error occurred: {e}")
+    except ValueError :
+        print("Plaese Enter a Inter numbers")
 
 def update_book():
     try:
         book_id_to_update = input("Enter the Book ID of the book to update: ")
-    except ValueError:
-        print("Please enter a valid integer for Book ID Ex.100?.")
-    # Reading the book data from the file
-    books = []
-    with open("book_in_stock.txt", "r") as book_file:
-        lines = book_file.readlines()
 
-    # Grouping lines into book entries
-    for i in range(0, len(lines), 5):
-        book = {
-            "id": lines[i].strip(),
-            "name": lines[i+1].strip(),
-            "category": lines[i+2].strip(),
-            "price": lines[i+3].strip(),
-            "add_date": lines[i+4].strip()
-        }
-        books.append(book)
+        # Reading the book data from the file
+        books = []
+        try:
+            with open("book_in_stock.txt", "r") as book_file:
+                lines = book_file.readlines()
 
-    # Searching for the book to update
-    book_found = False
-    for book in books:
-        if book['id'] == book_id_to_update:
-            print("Book found. Current details:")
-            print(f"Name: {book['name']}")
-            print(f"Category: {book['category']}")
-            print(f"Price: {book['price']}")
-            print(f"Add Date: {book['add_date']}")
+            # Grouping lines into book entries
+            for i in range(0, len(lines), 5):
+                book = {
+                    "id": lines[i].strip(),
+                    "name": lines[i+1].strip(),
+                    "category": lines[i+2].strip(),
+                    "price": lines[i+3].strip(),
+                    "add_date": lines[i+4].strip()
+                }
+                books.append(book)
 
-            # Updating book details
-            book['name'] = input("Enter new Book Name (or press Enter to keep the current): ") or book['name']
-            book['category'] = input("Enter new Book Category (or press Enter to keep the current): ") or book['category']
-            book['price'] = input("Enter new Book Price (or press Enter to keep the current): ") or book['price']
-            book['add_date'] = input("Enter new Add Date (or press Enter to keep the current): ") or book['add_date']
+            # Searching for the book to update
+            book_found = False
+            for book in books:
+                if book['id'].lower() == book_id_to_update.lower():
+                    print("Book found. Current details:")
+                    print(f"Name: {book['name']}")
+                    print(f"Category: {book['category']}")
+                    print(f"Price: {book['price']}")
+                    print(f"Add Date: {book['add_date']}")
 
-            book_found = True
-            break
+                    # Updating book details
+                    book['name'] = input("Enter new Book Name (or press Enter to keep the current): ") or book['name']
+                    book['category'] = input("Enter new Book Category (or press Enter to keep the current): ") or book['category']
+                    
+                    # Validate price input
+                    new_price = input("Enter new Book Price (or press Enter to keep the current): ")
+                    if new_price:
+                        while not new_price.replace('.', '', 1).isdigit():
+                            print("Invalid price. Please enter a valid number.")
+                            new_price = input("Enter new Book Price (or press Enter to keep the current): ")
+                        book['price'] = new_price or book['price']
+                    
+                    book['add_date'] = input("Enter new Add Date (or press Enter to keep the current): ") or book['add_date']
 
-    if not book_found:
-        print("Book ID not found.")
+                    book_found = True
+                    break
 
-    # Writing the updated data back to the file
-    with open("book_in_stock.txt", "w") as book_file:
-        for book in books:
-            book_file.write(f"{book['id']}\n")
-            book_file.write(f"{book['name']}\n")
-            book_file.write(f"{book['category']}\n")
-            book_file.write(f"{book['price']}\n")
-            book_file.write(f"{book['add_date']}\n")
+            if not book_found:
+                print("Book ID not found.")
 
-    if book_found:
-        print("Book details updated successfully.")
+            # Writing the updated data back to the file
+            with open("book_in_stock.txt", "w") as book_file:
+                for book in books:
+                    book_file.write(f"{book['id']}\n")
+                    book_file.write(f"{book['name']}\n")
+                    book_file.write(f"{book['category']}\n")
+                    book_file.write(f"{book['price']}\n")
+                    book_file.write(f"{book['add_date']}\n")
+
+            if book_found:
+                print("Book details updated successfully.")
+
+        except FileNotFoundError:
+            print("Error: The book_in_stock.txt file was not found.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
 
     
 def search_book(): 
@@ -139,7 +155,7 @@ def exit_program():
     elif choice.lower() == 'n':
         main()
     else:
-        print("Invalid option. Please enter 'Y' or 'N'")
+        print("Invalid option. Please enter 'y' or 'n'")
 
 
 if __name__ == "__main__":
