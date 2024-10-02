@@ -53,17 +53,22 @@ def add_book():
                             break
                         else:
                             print("Invalid category. Please enter 'manga' or 'novel'.")
+                    while True:
+                        try:
+                            book_price = float(input("Book Price: "))
+                            break
+                        except ValueError :
+                            print("Please enter a valid float ")
 
-                    book_price = float(input("Book Price: "))
+                add_date = input("Add Date (DD-MM-YYYY): ")
 
-                    add_date = input("Add Date (DD-MM-YYYY): ")
+                book_files.write(f"{book_id}\n")
+                book_files.write(f"{book_name}\n")
+                book_files.write(f"{book_category}\n")
+                book_files.write(f"{book_price}\n")
+                book_files.write(f"{add_date}\n")
+                print()
 
-                    book_files.write(f"{book_id}\n")
-                    book_files.write(f"{book_name}\n")
-                    book_files.write(f"{book_category}\n")
-                    book_files.write(f"{book_price}\n")
-                    book_files.write(f"{add_date}\n")
-                    print()
         except Exception as e :
             print(f"An unexpected error occurred: {e}")
     except ValueError :
