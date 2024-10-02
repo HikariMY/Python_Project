@@ -26,9 +26,7 @@ def main():
                 print("Number you entered is not an option")
         except ValueError:
             print("Please enter only numbers 1-7")
-    
-
-
+   
 def show_book():
     print("")
 
@@ -146,9 +144,7 @@ def update_book():
             print("Error: The book_in_stock.txt file was not found.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-
-
-    
+   
 def search_book(): 
     print("")
 
@@ -170,12 +166,8 @@ def del_book():
                     "add_date": lines[i+4].strip()
                 }
                 books.append(book)
-            print(books)
-
         # กรองรายการหนังสือที่ไม่ตรงกับ book_id ที่ต้องการลบ
         updated_books = [book for book in books if book['id'] != book_id_to_delete]
-        print(updated_books)
-
         # เช็คว่า book_id ตรงที่ต้องการลบมีอยู่ในไฟล์หรือไม่
         if len(books) == len(updated_books):
             raise ValueError("No book found with the given ID.")
