@@ -91,6 +91,7 @@ def show_book():
 
 def add_book():
     import re
+
     try:
         add_book_count = int(input("How many books do you want to add: "))
 
@@ -98,47 +99,51 @@ def add_book():
             with open("book_in_stock.txt", "a") as book_files:
                 for count in range(1, add_book_count + 1):
                     print(f'Enter data for book #{count}')
+                    
                     while True:
                         try:
                             book_id = int(input("Book ID: "))
                             break
                         except ValueError:
                             print("Please enter a valid integer for Book ID Ex.100?.")
-
+                    
                     book_name = input("Book Name: ")
 
                     while True:
                         book_category = input("Book Category (manga/novel): ").lower()
-                        if book_category in ['manga','novel']:
+                        if book_category in ['manga', 'novel']:
                             break
                         else:
                             print("Invalid category. Please enter 'manga' or 'novel'.")
+                    
                     while True:
                         try:
                             book_price = float(input("Book Price: "))
                             break
-                        except ValueError :
-                            print("Please enter a valid float ")
+                        except ValueError:
+                            print("Please enter a valid float.")
                     
                     while True:
-                            add_date = input("Add Date (DD-MM-YYYY): ")
-                            date_pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$"
-                            if re.match(date_pattern, add_date):
-                                break
-                            else:
-                                print("Please enter Date in formate DD-MM-YYYY")
+                        add_date = input("Add Date (DD-MM-YYYY): ")
+                        date_pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$"
+                        if re.match(date_pattern, add_date):
+                            break
+                        else:
+                            print("Please enter Date in format DD-MM-YYYY.")
 
-                book_files.write(f"{book_id}\n")
-                book_files.write(f"{book_name}\n")
-                book_files.write(f"{book_category}\n")
-                book_files.write(f"{book_price:.2f}\n")
-                book_files.write(f"{add_date}\n")
-                print()
+                    # Write each book's data without extra newlines
+                    book_files.write(f"{book_id}\n")
+                    book_files.write(f"{book_name}\n")
+                    book_files.write(f"{book_category}\n")
+                    book_files.write(f"{book_price:.2f}\n")
+                    book_files.write(f"{add_date}\n")
+                    print(f"Book #{count} data written.\n")
 
-        except Exception as e :
+        except Exception as e:
             print(f"An unexpected error occurred: {e}")
-    except ValueError :
-        print("Plaese Enter a Inter numbers")
+
+    except ValueError:
+        print("Please enter an integer number.")
 
 def update_book():
     import re
