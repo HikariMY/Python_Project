@@ -268,7 +268,7 @@ def search_book():
         print(f"An unexpected error occurred: {e}")
 
 def del_book():
-    book_id_to_delete = input("Enter the Book ID of the book to update: ")
+    book_id_to_delete = input("Enter the Book ID of the book to Delete: ")
     # อ่านข้อมูลจากไฟล์
     books = []
     try:
@@ -286,11 +286,15 @@ def del_book():
                 }
                 books.append(book)
         # กรองรายการหนังสือที่ไม่ตรงกับ book_id ที่ต้องการลบ
-        updated_books = [book for book in books if book['id'] != book_id_to_delete]
+        confirm = input(f"Are you sure you want to delete Book ID: {book_id_to_delete} ? 'Y' Yes 'N' No: ")
+        if confirm == 'Y' or confirm == 'y':
+            updated_books = [book for book in books if book['id'] != book_id_to_delete]
+            if len(books) == len(updated_books):
+                raise ValueError("No book found with the given ID.")
+        else:
+            updated_books = [book for book in books]
+            raise ValueError("Canceled. Returning to main menu.")
         # เช็คว่า book_id ตรงที่ต้องการลบมีอยู่ในไฟล์หรือไม่
-        if len(books) == len(updated_books):
-            raise ValueError("No book found with the given ID.")
-
         # เขียนข้อมูลที่เหลือกลับไปยังไฟล์
         with open("book_in_stock.txt", "w") as book_file:
             for book in updated_books:
@@ -309,7 +313,55 @@ def del_book():
         print(ve)  # แสดงข้อความเมื่อไม่พบ book_id ที่ต้องการลบ
 
 def filter_books():
-    print("")
+    category = {}
+    try:
+        # Reading the book data from the file
+        books = []
+        try:
+            with open("book_in_stock.txt", "r") as book_file:
+                lines = book_file.readlines()
+            
+            # Grouping lines into book entries
+            for i in range(0, len(lines), 5):
+                book = {
+                    "id": lines[i].strip(),
+                    "name": lines[i+1].strip(),
+                    "category": lines[i+2].strip(),
+                    "price": lines[i+3].strip(),
+                    "add_date": lines[i+4].strip()
+                }
+                books.append(book)
+
+            while True:  # Loop to keep asking for book searches
+                book_category = input("Enter the Category to search (or type 'exit' to back to main menu): ")
+                if book_category.lower() == 'exit':
+                    main()
+                    break
+
+                # Searching for the book
+                category_check = False
+                for book in books:
+                    if book['category'] == book_category:
+                        category[book_category] = {
+                        "books": []
+                    }
+                        category_check = True
+                        
+
+                if not category_check:
+                    print("Dont have.")
+                category[book_category]["books"].append({
+                    "id": book["id"],
+                    "name": book["name"],
+                    "price": book["price"],
+                    "date": book["add_date"]
+                })
+                print(category)
+                
+        except FileNotFoundError:
+            print("Error: The book_in_stock.txt file was not found.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 def exit_program():
     choice = input("Are you sure you want to exit? 'Y' , 'N'\nYour Choice: ")
