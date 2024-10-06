@@ -92,9 +92,16 @@ def show_book():
 
 def add_book():
     import re
+    import os
 
     try:
         add_book_count = int(input("How many books do you want to add: "))
+
+        existing_ids = set()
+        if os.path.exists("book_in_stock.txt"):
+            with open("book_in_stock.txt", "r") as book_files:
+                lines = book_files.readlines()
+                existing_ids = {lines[i].strip() for i in range(0, len(lines), 5) if lines[i].strip().isdigit()}
 
         try:
             with open("book_in_stock.txt", "a") as book_files:
@@ -104,9 +111,13 @@ def add_book():
                     while True:
                         try:
                             book_id = int(input("Book ID: "))
-                            break
+                            if str(book_id) in existing_ids:
+                                print("Book ID already exists. Please enter a unique ID.")
+                            else:
+                                existing_ids.add(str(book_id)) 
+                                break
                         except ValueError:
-                            print("Please enter a valid integer for Book ID Ex.100?.")
+                            print("Please enter a valid integer for Book ID. Ex. 100.")
                     
                     book_name = input("Book Name: ")
 
@@ -122,7 +133,7 @@ def add_book():
                             book_price = float(input("Book Price: "))
                             break
                         except ValueError:
-                            print("Please enter a valid float.")
+                            print("Please enter a valid float for Book Price.")
                     
                     while True:
                         add_date = input("Add Date (DD-MM-YYYY): ")
@@ -132,19 +143,16 @@ def add_book():
                         else:
                             print("Please enter Date in format DD-MM-YYYY.")
 
-                    # Write each book's data without extra newlines
-                    book_files.write(f"{book_id}\n")
-                    book_files.write(f"{book_name}\n")
-                    book_files.write(f"{book_category}\n")
-                    book_files.write(f"{book_price:.2f}\n")
-                    book_files.write(f"{add_date}\n")
-                    print(f"Book #{count} data written.\n")
+                    book_files.write(f"{book_id}\n{book_name}\n{book_category}\n{book_price:.2f}\n{add_date}\n")
+                    print(f"Book #{count} Saved.")
 
         except Exception as e:
-            print(f"An unexpected error occurred: {e}")
+            print(f"An unexpected error occurred while adding books: {e}")
 
     except ValueError:
-        print("Please enter an integer number.")
+        print("Please enter a valid integer number for the number of books.")
+
+
 
 def update_book():
     import re
@@ -361,7 +369,7 @@ def filter_books():
         print(f"An unexpected error occurred: {e}")
 
 def exit_program():
-    choice = input("Are you sure you want to exit? 'Y' , 'N'\nYour Choice: ")
+    choice = input("Are you sure you want to exit? 'y' , 'n'\nYour Choice: ")
     if choice.lower() == 'y':
         exit()
     elif choice.lower() == 'n':
