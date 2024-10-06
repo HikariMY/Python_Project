@@ -318,7 +318,6 @@ def del_book():
         print(ve)  # แสดงข้อความเมื่อไม่พบ book_id ที่ต้องการลบ
 
 def filter_books():
-    category = {}
     try:
         # Reading the book data from the file
         books = []
@@ -337,31 +336,23 @@ def filter_books():
                 }
                 books.append(book)
 
-            while True:  # Loop to keep asking for book searches
-                book_category = input("Enter the Category to search (or type 'exit' to back to main menu): ")
-                if book_category.lower() == 'exit':
-                    main()
-                    break
-
+          
+            book_category = input("Enter the Category to search ")
                 # Searching for the book
-                category_check = False
-                for book in books:
-                    if book['category'] == book_category:
-                        category[book_category] = {
-                        "books": []
-                    }
-                        category_check = True
+            filters = [book for book in books if book['category'] == book_category]
+            print(filters)
+            if len(filters) == 0:
+                print(f"No books found in the '{book_category}' category.")
+            else:
+                print("-" * 95)
+                print(f"      Category : {book_category.capitalize()}")
+                print(f"      Number of Products: {len(filters)}")
+            for book in filters:
+                print(f"      {book['id']:<10}{book['name']:<20}{book['category']:<15}{book['price']:<10}{book['add_date']}")
+            print("-" * 95)
+
                         
 
-                if not category_check:
-                    print("Dont have.")
-                category[book_category]["books"].append({
-                    "id": book["id"],
-                    "name": book["name"],
-                    "price": book["price"],
-                    "date": book["add_date"]
-                })
-                print(category)
                 
         except FileNotFoundError:
             print("Error: The book_in_stock.txt file was not found.")
