@@ -340,7 +340,7 @@ def filter_books():
             book_category = input("Enter the Category to search ")
                 # Searching for the book
             filters = [book for book in books if book['category'] == book_category]
-            print(filters)
+            
             if len(filters) == 0:
                 print(f"No books found in the '{book_category}' category.")
             else:
