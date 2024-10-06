@@ -17,4 +17,13 @@ manga
 land
 manga
 233.00
-02-10-2024
+02-10-20241007
+chainsawman
+manga
+1000.00
+06-10-2024
+1008
+chainsawman2
+novel
+1000.00
+06-10-2024
