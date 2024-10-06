@@ -69,6 +69,7 @@ def show_book():
 
         # แสดงผลสรุปตามหมวดหมู่
         total_categories = len(category_details)
+        print("=" * 95)
         print("Summary Report:")
         print("Added Book:\n")
 
@@ -336,24 +337,24 @@ def filter_books():
                 }
                 books.append(book)
 
-          
-            book_category = input("Enter the Category to search ")
-                # Searching for the book
+            while True :
+                book_category = input("Enter the Category to search (manga or novel): ").lower()
+                if book_category in ['manga','novel'] :
+                    break
+                else:
+                    print("Please enter manga or novel")
+                    # Searching for the book
             filters = [book for book in books if book['category'] == book_category]
             
             if len(filters) == 0:
-                print(f"No books found in the '{book_category}' category.")
+                print(f"Books in the '{book_category}' category not found.")
             else:
                 print("-" * 95)
                 print(f"      Category : {book_category.capitalize()}")
                 print(f"      Number of Products: {len(filters)}")
             for book in filters:
                 print(f"      {book['id']:<10}{book['name']:<20}{book['category']:<15}{book['price']:<10}{book['add_date']}")
-            print("-" * 95)
-
-                        
-
-                
+            print("-" * 95)              
         except FileNotFoundError:
             print("Error: The book_in_stock.txt file was not found.")
     except Exception as e:
