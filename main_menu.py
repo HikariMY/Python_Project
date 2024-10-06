@@ -69,6 +69,7 @@ def show_book():
 
         # แสดงผลสรุปตามหมวดหมู่
         total_categories = len(category_details)
+        print("=" * 95)
         print("Summary Report:")
         print("Added Book:\n")
 
@@ -318,7 +319,6 @@ def del_book():
         print(ve)  # แสดงข้อความเมื่อไม่พบ book_id ที่ต้องการลบ
 
 def filter_books():
-    category = {}
     try:
         # Reading the book data from the file
         books = []
@@ -337,32 +337,24 @@ def filter_books():
                 }
                 books.append(book)
 
-            while True:  # Loop to keep asking for book searches
-                book_category = input("Enter the Category to search (or type 'exit' to back to main menu): ")
-                if book_category.lower() == 'exit':
-                    main()
+            while True :
+                book_category = input("Enter the Category to search (manga or novel): ").lower()
+                if book_category in ['manga','novel'] :
                     break
-
-                # Searching for the book
-                category_check = False
-                for book in books:
-                    if book['category'] == book_category:
-                        category[book_category] = {
-                        "books": []
-                    }
-                        category_check = True
-                        
-
-                if not category_check:
-                    print("Dont have.")
-                category[book_category]["books"].append({
-                    "id": book["id"],
-                    "name": book["name"],
-                    "price": book["price"],
-                    "date": book["add_date"]
-                })
-                print(category)
-                
+                else:
+                    print("Please enter manga or novel")
+                    # Searching for the book
+            filters = [book for book in books if book['category'] == book_category]
+            
+            if len(filters) == 0:
+                print(f"Books in the '{book_category}' category not found.")
+            else:
+                print("-" * 95)
+                print(f"      Category : {book_category.capitalize()}")
+                print(f"      Number of Products: {len(filters)}")
+            for book in filters:
+                print(f"      {book['id']:<10}{book['name']:<20}{book['category']:<15}{book['price']:<10}{book['add_date']}")
+            print("-" * 95)              
         except FileNotFoundError:
             print("Error: The book_in_stock.txt file was not found.")
     except Exception as e:
