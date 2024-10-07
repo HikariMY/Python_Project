@@ -1,0 +1,31 @@
+===============================================================================================
+Summary Report:
+Added Books:
+
+      Category : Manga
+      Number of Products: 3
+      1002      pedo in naverland   manga          233.00    01-10-2024
+      1005      naverland           manga          233.00    02-10-2024
+      1009      chainsawman         manga          1000.00   05-10-2024
+      Total Price for Manga : 1466.00
+-----------------------------------------------------------------------------------------------
+      Category : Novel
+      Number of Products: 2
+      1003      KingdomCum          novel          300.00    22-09-2024
+      1010      chainsawman2        novel          1000.00   05-10-2024
+      Total Price for Novel : 1300.00
+-----------------------------------------------------------------------------------------------
+      Category : Si-fi
+      Number of Products: 2
+      1011      fold city           si-fi          234.56    30-05-2023
+      1012      far you magity      si-fi          230.00    20-06-2011
+      Total Price for Si-fi : 464.56
+-----------------------------------------------------------------------------------------------
+      Category : Horror
+      Number of Products: 1
+      1013      house of dead       horror         234.00    20-02-2020
+      Total Price for Horror : 234.00
+-----------------------------------------------------------------------------------------------
+      Total Items: 8
+      Total Categories: 4
+===============================================================================================
