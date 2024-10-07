@@ -152,8 +152,6 @@ def add_book():
     except ValueError:
         print("Please enter a valid integer number for the number of books.")
 
-
-
 def update_book():
     import re
     try:
