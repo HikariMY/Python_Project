@@ -30,7 +30,6 @@ def main():
 def show_book():
     category_details = {}
     total_items = 0
-    total_categories = 0
 
     try:
         with open("book_in_stock.txt", "r") as book_file:
@@ -38,25 +37,25 @@ def show_book():
 
         # ตรวจสอบว่าจำนวนบรรทัดต้องเป็นกลุ่มละ 5 บรรทัด
         if len(lines) % 5 != 0:
-            print("Data is not complete ")
+            print("Data is not complete or has missing lines.")
             return
 
         # ดึงข้อมูลหนังสือและจัดกลุ่มตามหมวดหมู่
         for i in range(0, len(lines), 5):
-            book_id = lines[i].strip()       # รหัสหนังสือ (บรรทัดที่ 1)
-            book_name = lines[i+1].strip()   # ชื่อหนังสือ (บรรทัดที่ 2)
-            category = lines[i+2].strip()    # หมวดหมู่หนังสือ (บรรทัดที่ 3)
+            book_id = lines[i].strip()        # รหัสหนังสือ (บรรทัดที่ 1)
+            book_name = lines[i+1].strip()    # ชื่อหนังสือ (บรรทัดที่ 2)
+            category = lines[i+2].strip()     # หมวดหมู่หนังสือ (บรรทัดที่ 3)
             price = float(lines[i+3].strip()) # ราคา (บรรทัดที่ 4)
-            book_date = lines[i+4].strip()   # วันที่เพิ่มหนังสือ (บรรทัดที่ 5)
+            book_date = lines[i+4].strip()    # วันที่เพิ่มหนังสือ (บรรทัดที่ 5)
 
             if category:
-                category = category.lower()  # เปลี่ยนเป็นตัวพิมพ์เล็ก
+                category = category.lower()  # เปลี่ยนเป็นตัวพิมพ์เล็กสำหรับหมวดหมู่
                 if category not in category_details:
                     category_details[category] = {
                         "books": [],
                         "total_price": 0.0
                     }
-                
+
                 # เพิ่มข้อมูลหนังสือในหมวดหมู่
                 category_details[category]["books"].append({
                     "id": book_id,
@@ -67,26 +66,29 @@ def show_book():
                 category_details[category]["total_price"] += price
                 total_items += 1
 
-        # แสดงผลสรุปตามหมวดหมู่
-        total_categories = len(category_details)
-        print("=" * 95)
-        print("Summary Report:")
-        print("Added Book:\n")
+        # เขียนผลสรุปไปที่ไฟล์ Stock_report.txt
+        with open("Stock_report.txt", "w") as report_file:
+            report_file.write("=" * 95 + "\n")
+            report_file.write("Summary Report:\n")
+            report_file.write("Added Books:\n\n")
 
-        for category, details in category_details.items():
-            print(f"      Category : {category.capitalize()}")
-            print(f"      Number of Products: {len(details['books'])}")
-            for book in details["books"]:
-                print(f"      {book['id']:<10}{book['name']:<20}{category:<15}{book['price']:<10}{book['date']}")
-            print(f"      Total Price :{details['total_price']:.2f}")
-            print("-" * 95)
+            for category, details in category_details.items():
+                report_file.write(f"      Category : {category.capitalize()}\n")
+                report_file.write(f"      Number of Products: {len(details['books'])}\n")
+                for book in details["books"]:
+                    report_file.write(f"      {book['id']:<10}{book['name']:<20}{category:<15}{book['price']:<10.2f}{book['date']}\n")
+                report_file.write(f"      Total Price for {category.capitalize()} : {details['total_price']:.2f}\n")
+                report_file.write("-" * 95 + "\n")
 
-        print(f"      Total Item: {total_items}")
-        print(f"      Total Category: {total_categories}")
-        print("=" * 95)
+            total_categories = len(category_details)  # เพิ่มการนับจำนวนหมวดหมู่
+            report_file.write(f"      Total Items: {total_items}\n")
+            report_file.write(f"      Total Categories: {total_categories}\n")
+            report_file.write("=" * 95 + "\n")
+
+        print("Report successfully written to 'Stock_report.txt'.")
 
     except FileNotFoundError:
-        print("File 'book_in_stock.txt' not fond.")
+        print("File 'book_in_stock.txt' not found.")
     except Exception as e:
         print(f"Error: {e}")
 
@@ -107,34 +109,34 @@ def add_book():
             with open("book_in_stock.txt", "a") as book_files:
                 for count in range(1, add_book_count + 1):
                     print(f'Enter data for book #{count}')
-                    
+
                     while True:
                         try:
                             book_id = int(input("Book ID: "))
                             if str(book_id) in existing_ids:
                                 print("Book ID already exists. Please enter a unique ID.")
                             else:
-                                existing_ids.add(str(book_id)) 
+                                existing_ids.add(str(book_id))
                                 break
                         except ValueError:
                             print("Please enter a valid integer for Book ID. Ex. 100.")
-                    
-                    book_name = input("Book Name: ")
+
+                    book_name = input("Book Name: ").strip()
 
                     while True:
-                        book_category = input("Book Category (manga/novel): ").lower()
-                        if book_category in ['manga', 'novel']:
+                        book_category = input("Book Category (manga, novel or other): ").strip().lower()
+                        if book_category: 
                             break
                         else:
-                            print("Invalid category. Please enter 'manga' or 'novel'.")
-                    
+                            print("Please enter a valid category.")
+
                     while True:
                         try:
                             book_price = float(input("Book Price: "))
                             break
                         except ValueError:
                             print("Please enter a valid float for Book Price.")
-                    
+
                     while True:
                         add_date = input("Add Date (DD-MM-YYYY): ")
                         date_pattern = r"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$"
@@ -157,13 +159,11 @@ def update_book():
     try:
         book_id_to_update = input("Enter the Book ID of the book to update: ")
 
-        # Reading the book data from the file
         books = []
         try:
             with open("book_in_stock.txt", "r") as book_file:
                 lines = book_file.readlines()
 
-            # Grouping lines into book entries
             for i in range(0, len(lines), 5):
                 book = {
                     "id": lines[i].strip(),
@@ -174,7 +174,6 @@ def update_book():
                 }
                 books.append(book)
 
-            # Searching for the book to update
             book_found = False
             for book in books:
                 if book['id'].lower() == book_id_to_update.lower():
@@ -184,16 +183,16 @@ def update_book():
                     print(f"Price: {book['price']}")
                     print(f"Add Date: {book['add_date']}")
 
-                    # Updating book details
                     book['name'] = input("Enter new Book Name (or press Enter to keep the current): ") or book['name']
 
                     while True:
-                        book['category'] = input("Enter new Book Category (or press Enter to keep the current): ") or book['category']
-                        if book['category'] in ['manga','novel']:
+                        update_cat = input("Enter new Book Category (or press Enter to keep the current): ").lower()
+                        if update_cat == '':
                             break
                         else:
-                            print("Invalid category. Please enter 'manga' or 'novel'.")
-                    # Validate price input
+                            book['category'] = update_cat
+                            break
+
                     new_price = input("Enter new Book Price (or press Enter to keep the current): ")
                     if new_price:
                         while not new_price.replace('.', '', 1).isdigit():
@@ -215,7 +214,6 @@ def update_book():
             if not book_found:
                 print("Book ID not found.")
 
-            # Writing the updated data back to the file
             with open("book_in_stock.txt", "w") as book_file:
                 for book in books:
                     book_file.write(f"{book['id']}\n")
@@ -343,12 +341,8 @@ def filter_books():
                 }
                 books.append(book)
 
-            while True :
-                book_category = input("Enter the Category to search (manga or novel): ").lower()
-                if book_category in ['manga','novel'] :
-                    break
-                else:
-                    print("Please enter manga or novel")
+
+            book_category = input("Enter the Category to search (manga, novel or other): ").lower()
                     # Searching for the book
             filters = [book for book in books if book['category'] == book_category]
             
